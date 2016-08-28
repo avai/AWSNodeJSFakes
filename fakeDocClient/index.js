@@ -53,6 +53,24 @@ module.exports.createTable = function(name, keys) {
                 Items: matchedItems
             };
         },
+        scan: function (params) {
+            if (params.IndexName) {
+                var f = this.PredefinedQueries[params.IndexName];
+                if (f)
+                    return f(params);
+                throw Error("You tried to query index " + params.IndexName + " on table " + params.TableName + " and that requires you first set up the query with setupQuery.\r\nParams were: \r\n" + JSON.stringify(params));
+            }
+            if (params.FilterExpression || params.ScanFilter)
+                throw Error('Filtering on a scan is not supported in the fake implementation');
+            var matchedItems = [];
+            for (var i in this.Items) {
+                matchedItems.push(this.Items[i]);
+            }
+            return {
+                Count: matchedItems.length,
+                Items: matchedItems
+            };
+        },
         name: name,
         clearData: function() {
             this.Items = {};
@@ -115,6 +133,10 @@ module.exports.setupQuery = function(params, func) {
 module.exports.query = function(params, cb) {
     var table = internalGetTable(params);
     cb(null, table.query(params));
+}
+module.exports.scan = function(params, cb) {
+    var table = internalGetTable(params);
+    cb(null, table.scan(params));
 }
 module.exports.reset = function() {
     for (var i in tables) {

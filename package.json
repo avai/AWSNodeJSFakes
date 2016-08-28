@@ -1,0 +1,26 @@
+{
+  "name": "aws-nodejs-fakes",
+  "version": "0.0.9",
+  "description": "A nodeJS implementation of fake AWS services.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avai/AWSNodeJSFakes.git"
+  },
+  "keywords": [
+    "AWS",
+    "NodeJS",
+    "Fakes",
+    "Stubs",
+    "Mocks"
+  ],
+  "author": "Jason Aminto",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/avai/AWSNodeJSFakes/issues"
+  },
+  "homepage": "https://github.com/avai/AWSNodeJSFakes#readme"
+}

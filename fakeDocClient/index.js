@@ -76,8 +76,14 @@ module.exports.get = function(params, cb) {
         Item: item
     });
 };
-module.exports.synchronousGet = function(params) {
+function internalGetTable(params) {
     var table = tables[params.TableName];
+    if ( table == null )
+        throw Error("Table " + params.TableName + " does not exist");
+    return table;
+}
+module.exports.synchronousGet = function(params) {
+    var table = internalGetTable(params);
     return table.get(params.Key);
 }
 module.exports.putItem = function(params, cb) {
@@ -88,7 +94,7 @@ module.exports.put = function(params, cb) {
     cb(null);
 };
 module.exports.delete = function(params, cb) {
-     var table = tables[params.TableName];
+     var table = internalGetTable(params);
     table.delete(params.Key);
     cb(null);
 };
@@ -97,17 +103,17 @@ module.exports.printDb = function() {
     console.dir(tables);
 };
 module.exports.synchronousPut = function(params) {
-    var table = tables[params.TableName];
+    var table = internalGetTable(params);
     table.put(params.Item);
 };
 module.exports.setupQuery = function(params, func) {
-    var table = tables[params.TableName];
+    var table = internalGetTable(params);
     if (!params.IndexName)
         throw Error("You must provide an index to setup a query");
     table.PredefinedQueries[params.IndexName] = func;
 };
 module.exports.query = function(params, cb) {
-    var table = tables[params.TableName];
+    var table = internalGetTable(params);
     cb(null, table.query(params));
 }
 module.exports.reset = function() {

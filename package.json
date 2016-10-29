@@ -1,6 +1,6 @@
 {
   "name": "aws-nodejs-fakes",
-  "version": "0.0.9",
+  "version": "0.0.1",
   "description": "A nodeJS implementation of fake AWS services.",
   "main": "index.js",
   "scripts": {

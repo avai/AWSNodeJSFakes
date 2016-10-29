@@ -6,6 +6,7 @@ module.exports.createTable = function(name, keys) {
         Keys: keys,
         Items: {},
         PredefinedQueries: {},
+        UpdateStatements: [],
         getKey: function(item) {
             //console.log ("Hash: " + item[this.HashKey]);
             var key = item[this.HashKey];
@@ -52,6 +53,13 @@ module.exports.createTable = function(name, keys) {
                 Count: matchedItems.length,
                 Items: matchedItems
             };
+        },
+        update: function(params) {
+            var f = this.UpdateStatements.shift();
+            if (f)
+                return f(params);
+            throw Error("You tried an update statement on table " + params.TableName + " and that requires you first set up the query with setupUpdate.\r\nParams were: \r\n" + JSON.stringify(params));
+            
         },
         scan: function (params) {
             if (params.IndexName) {
@@ -111,8 +119,19 @@ module.exports.put = function(params, cb) {
     module.exports.synchronousPut(params);
     cb(null);
 };
+module.exports.update = function(params, cb) {
+    var table = internalGetTable(params);
+    cb(null, table.update(params));
+};
+module.exports.updateItem = function(params, cb) {
+    update(params, cb);
+}
+module.exports.setupUpdate = function(params, func) {
+    var table = internalGetTable(params);
+    table.UpdateStatements.push(func);
+}
 module.exports.delete = function(params, cb) {
-     var table = internalGetTable(params);
+    var table = internalGetTable(params);
     table.delete(params.Key);
     cb(null);
 };

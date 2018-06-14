@@ -14,7 +14,12 @@ module.exports.publish = function(params, cb) {
     }
 
     publishedEvents.push(params.Message);
-    cb(null);
+    if (cb){
+        return cb();
+    }
+    else{
+        return {promise: function(){console.log("PROMISE Returned!")}}
+    }
 };
 module.exports.getPublishedEventsForTopic = function (topicName) {
     return topics[topicName];

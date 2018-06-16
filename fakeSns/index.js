@@ -7,6 +7,7 @@ module.exports.createTopic = function(params, cb) {
 };
 module.exports.publish = function(params, cb) {
     var topicArn = params.TopicArn;
+    console.log("TOPIC ARN: " + topicArn);
     var publishedEvents = topics[topicArn];
     if (!publishedEvents) {
         publishedEvents = [];
@@ -14,12 +15,17 @@ module.exports.publish = function(params, cb) {
     }
 
     publishedEvents.push(params.Message);
+    allPublishedEvents.push(params);
     if (cb){
         return cb();
     }
     else{
         return {promise: function(){console.log("PROMISE Returned!")}}
     }
+};
+const allPublishedEvents = [];
+module.exports.getAllPublishedEvents = function () {
+    return allPublishedEvents;
 };
 module.exports.getPublishedEventsForTopic = function (topicName) {
     return topics[topicName];
